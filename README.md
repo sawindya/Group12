@@ -8,7 +8,7 @@ url <- "https://raw.githubusercontent.com/ghazkha/Assessment4/main/growth_data.c
 destfile <- "growth_data.csv"
 download.file(url, destfile)
 
-#gene expression and growth data was downloaded #
+#this code identifies the gene expression and growth data that was downloaded from raw files hosted on GitHub and files were saved to the local working directory#
 
 #1.Read in the file, making the gene identifiers the row names. Show a table of values for the first six genes#
 # Read the gene_expression.tsv file using read.table
@@ -30,7 +30,7 @@ head(gene_expression, 6)
 ## ENSG00000237613.2_FAM138A 0
 ## ENSG00000268020.3_OR4G4P 0
 
-#gene identifires for the first 6 genes#
+#This above code snippet loaded the gene expression dataset from a tab-separated values TSV file named "gene_expression.tsv" into R. The first row was assigned as the header, with the first column serving as the row names. Lastly, it presented the first six rows of the loaded dataset. This quickly gave a sense of the levels of gene expression across different samples, providing an initial insight into the structure and content of data, such as which genes were analyzed and under what conditions or treatments their expression values were checked#
 
 #2.Make a new column which is the mean of the other columns. Show a table of values for the first six
 genes#
@@ -54,7 +54,7 @@ head(gene_expression, 6)
 ## ENSG00000237613.2_FAM138A 0 0.0000000
 ## ENSG00000268020.3_OR4G4P 0 0.3333333
 
-#mean of columns#
+#This code fragment calculates the mean expression of every gene within the dataset by utilizing the function rowMeans on the gene_expression dataframe. This calculation created a new column, called mean_expression, that contains the average expression values for each gene across all samples. Finally, this column added the command shown the first six rows of the updated dataset, which was able to give an idea of general trends of expression and further allowed other analyses or comparisons among the genes concerning their average expression#
 
 #3.List the 10 genes with the highest mean expression#
 # Assuming the mean_expression column has already been added
@@ -87,7 +87,7 @@ top_10_genes
 ## ENSG00000198712.1_MT-CO2 122816 265678.0
 ## ENSG00000156508.17_EEF1A1 339347 232187.3
 
-#Listed the 10 genes with the highest mean expression#
+#This code snippet sorted the gene_expression dataset in descending order of the genes based on their mean expression that was calculated earlier. The order function was used for this, and the output was assigned to a new dataframe called top_genes. Later, it filtered the top 10 genes with the maximum mean expression values by applying the head function on the sorted dataset. The final output in top_10_genes represented the most highly expressed genes, and by focusing their analysis on this output, they were able to identify key players involved in the investigated biological process#
 
 Question4
 # Assuming the mean_expression column has already been added
