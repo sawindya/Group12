@@ -16,6 +16,55 @@ url <- "https://raw.githubusercontent.com/ghazkha/Assessment4/main/growth_data.c
 destfile <- "growth_data.csv"
 download.file(url, destfile)
 ```
+#1.Read in the file, making the gene identifiers the row names. Show a table of values for the first six genes#
+```{r}
+# Read the gene_expression.tsv file using read.table 
+gene_expression <- read.table("gene_expression.tsv", header = TRUE, sep = "\t", row.names = 1) 
+# Show a table of values for the first six genes 
+head(gene_expression, 6)
+
+```
+#2.Make a new column which is the mean of the other columns. Show a table of values for the first six genes#
+```{r}
+# Assuming gene_expression is already loaded
+# Calculate the mean of the gene expression values (excluding row names) 
+gene_expression$mean_expression <- rowMeans(gene_expression)
+# Show a table of values for the first six genes, including the new mean column 
+head(gene_expression, 6)
+
+```
+#3.List the 10 genes with the highest mean expression#
+```{r}
+# Assuming the mean_expression column has already been added
+# Order the data frame by the mean expression in descending order
+top_genes <- gene_expression[order(-gene_expression$mean_expression), ]
+
+# Select the top 10 genes
+top_10_genes <- head(top_genes, 10)
+
+# Display the top 10 genes with their mean expression values
+top_10_genes
+```
+#4.Determine the number of genes with a mean <10#
+```{r}
+# Assuming the mean_expression column has already been added
+# Count the number of genes with mean expression less than 10
+num_genes_below_10 <- sum(gene_expression$mean_expression < 10)
+
+# Display the result
+num_genes_below_10
+```
+#5.Make a histogram plot of the mean values and include it into your report#
+```{r}
+# Create a histogram of the mean expression values using base R
+hist(gene_expression$mean_expression,
+     breaks = 20,             # Number of bins
+     col = "blue",           # Fill color
+     border = "black",       # Border color
+     main = "Histogram of Mean Gene Expression", # Title
+     xlab = "Mean Expression", # x-axis label
+     ylab = "Frequency")      # y-axis label
+```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
