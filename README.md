@@ -77,3 +77,79 @@ top_10_genes
 ## ENSG00000211445.11_GPX3 306070 270141.7
 ## ENSG00000198712.1_MT-CO2 122816 265678.0
 ## ENSG00000156508.17_EEF1A1 339347 232187.3
+Question4
+# Assuming the mean_expression column has already been added
+# Count the number of genes with mean expression less than 10
+num_genes_below_10 <- sum(gene_expression$mean_expression < 10)
+# Display the result
+num_genes_below_10
+## [1] 35988
+Question5
+# Create a histogram of the mean expression values using base R
+hist(gene_expression$mean_expression,
+breaks = 20, # Number of bins
+col = "blue", # Fill color
+border = "black", # Border color
+main = "Histogram of Mean Gene Expression", # Title
+xlab = "Mean Expression", # x-axis label
+ylab = "Frequency") # y-axis label
+Histogram of Mean Gene Expression
+Mean Expression
+Frequency
+0e+00 1e+05 2e+05 3e+05 4e+05 5e+05
+0 10000 30000 50000
+Question 6
+# Read the CSV file into an R object
+growth_data <- read.csv("growth_data.csv")
+# Display the column names of the data frame
+column_names <- colnames(growth_data)
+print(column_names)
+## [1] "Site" "TreeID" "Circumf_2005_cm" "Circumf_2010_cm"
+## [5] "Circumf_2015_cm" "Circumf_2020_cm"
+Question 7
+#Read in the CSV file
+growth_data <- read.csv("growth_data.csv")
+# Display the first few rows of the data to understand its structure
+head(growth_data)
+## Site TreeID Circumf_2005_cm Circumf_2010_cm Circumf_2015_cm
+## 1 northeast A012 5.2 10.1 19.9
+## 2 southwest A039 4.9 9.6 18.9
+## 3 southwest A010 3.7 7.3 14.3
+## 4 northeast A087 3.8 6.5 10.9
+## 5 southwest A074 3.8 6.4 10.9
+## 6 northeast A008 5.9 10.0 16.8
+## Circumf_2020_cm
+## 1 38.9
+## 2 37.0
+## 3 28.1
+## 4 18.5
+## 5 18.4
+## 6 28.4
+# Assuming the first half of the data is for the Control site
+# and the second half is for the Treatment site. Adjust as necessary.
+# Split the data based on site
+control_data <- growth_data[1:(nrow(growth_data) / 2), ]
+treatment_data <- growth_data[((nrow(growth_data) / 2) + 1):nrow(growth_data), ]
+# Calculate mean and standard deviation for the Control site
+mean_start_control <- mean(control_data$Circumf_2005_cm, na.rm = TRUE)
+sd_start_control <- sd(control_data$Circumf_2005_cm, na.rm = TRUE)
+mean_end_control <- mean(control_data$Circumf_2020_cm, na.rm = TRUE)
+sd_end_control <- sd(control_data$Circumf_2020_cm, na.rm = TRUE)
+# Calculate mean and standard deviation for the Treatment site
+mean_start_treatment <- mean(treatment_data$Circumf_2005_cm, na.rm = TRUE)
+sd_start_treatment <- sd(treatment_data$Circumf_2005_cm, na.rm = TRUE)
+mean_end_treatment <- mean(treatment_data$Circumf_2020_cm, na.rm = TRUE)
+sd_end_treatment <- sd(treatment_data$Circumf_2020_cm, na.rm = TRUE)
+# Display the results
+results <- data.frame(
+Site = c("Control", "Control", "Treatment", "Treatment"),
+Measurement = c("Start (2005)", "End (2020)", "Start (2005)", "End (2020)"),
+Mean = c(mean_start_control, mean_end_control, mean_start_treatment, mean_end_treatment),
+SD = c(sd_start_control, sd_end_control, sd_start_treatment, sd_end_treatment)
+)
+print(results)
+## Site Measurement Mean SD
+## 1 Control Start (2005) 5.078 1.059127
+## 2 Control End (2020) 40.052 16.904428
+## 3 Treatment Start (2005) 5.076 1.060527
+## 4 Treatment End (2020) 59.772 22.577839
