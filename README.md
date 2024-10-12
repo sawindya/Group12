@@ -176,6 +176,7 @@ ggplot(plot_data, aes(x = Year, y = Circumference, fill = Site)) +
        y = "Circumference (cm)",
        x = "Year") +
   theme_minimal()
+#box plot of tree circumferance from the years 2005 to 2020#
 
 
 install.packages("ggplot2")
@@ -202,7 +203,7 @@ ggplot(plot_data, aes(x = Year, y = Circumference, fill = Site)) +
        y = "Circumference (cm)",
        x = "Year") +
   theme_minimal()
-
+#box plot of tree circumferance from the years 2005 to 2020#
 
 #question 9
 
@@ -235,6 +236,9 @@ print(growth_summary)
 ##   <chr>           <dbl>
 ## 1 northeast        42.9
 ## 2 southwest        35.5
+
+#mean growth over the 10 years(2010 to 2020)#
+
 #question 10
 
 # Load necessary library
@@ -264,3 +268,6 @@ print(t_test_result)
 ##                   42.94                   35.49
 ## 3 Treatment Start (2005) 5.076 1.060527
 ## 4 Treatment End (2020) 59.772 22.577839
+
+#using t-test to determine the p-value that the 10 year growth is different at two sites#
+
