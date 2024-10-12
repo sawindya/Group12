@@ -7,7 +7,9 @@ download.file(url, destfile)
 url <- "https://raw.githubusercontent.com/ghazkha/Assessment4/main/growth_data.csv"
 destfile <- "growth_data.csv"
 download.file(url, destfile)
+
 #gene expression and growth data was downloaded #
+
 #1.Read in the file, making the gene identifiers the row names. Show a table of values for the first six genes#
 # Read the gene_expression.tsv file using read.table
 gene_expression <- read.table("gene_expression.tsv", header = TRUE, sep = "\t", row.names = 1)
@@ -27,7 +29,9 @@ head(gene_expression, 6)
 ## ENSG00000243485.5_MIR1302-2HG 0
 ## ENSG00000237613.2_FAM138A 0
 ## ENSG00000268020.3_OR4G4P 0
+
 #gene identifires for the first 6 genes#
+
 #2.Make a new column which is the mean of the other columns. Show a table of values for the first six
 genes#
 # Assuming gene_expression is already loaded
@@ -49,7 +53,9 @@ head(gene_expression, 6)
 ## ENSG00000243485.5_MIR1302-2HG 0 0.3333333
 ## ENSG00000237613.2_FAM138A 0 0.0000000
 ## ENSG00000268020.3_OR4G4P 0 0.3333333
+
 #mean of columns#
+
 #3.List the 10 genes with the highest mean expression#
 # Assuming the mean_expression column has already been added
 # Order the data frame by the mean expression in descending order
@@ -80,7 +86,9 @@ top_10_genes
 ## ENSG00000211445.11_GPX3 306070 270141.7
 ## ENSG00000198712.1_MT-CO2 122816 265678.0
 ## ENSG00000156508.17_EEF1A1 339347 232187.3
+
 #Listed the 10 genes with the highest mean expression#
+
 Question4
 # Assuming the mean_expression column has already been added
 # Count the number of genes with mean expression less than 10
