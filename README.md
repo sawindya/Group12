@@ -269,3 +269,525 @@ print(t_test_result)
 
 #using t-test to determine the p-value that the 10 year growth is different at two sites#
 
+
+
+
+---
+title: "part 2"
+output: html_document
+date: "2024-10-12"
+---
+# Question 1
+# Download the whole set of coding DNA sequences for E. coli and your organism of interest. How many coding sequences are present in these organisms? Present this in the form of a table. Describe any differences between the two organisms. 
+#downloading the cds files from the ensemble
+
+```{r}
+suppressPackageStartupMessages({
+  library("seqinr") # Package for sequence data
+  library("R.utils") # General utilities for file operations
+})
+
+# Download Tetrasphaera coding sequences
+tetrasphaera_url <- "https://ftp.ensemblgenomes.ebi.ac.uk/pub/bacteria/release-59/fasta/bacteria_8_collection/tetrasphaera_sp_soil756_gca_001428065/cds/Tetrasphaera_sp_soil756_gca_001428065.Soil756.cds.all.fa.gz"
+download.file(tetrasphaera_url, destfile = "tetrasphaera_cds.fa.gz")
+
+# Unzip the Tetrasphaera file, removing existing unzipped file if necessary
+if (file.exists("tetrasphaera_cds.fa")) {
+  file.remove("tetrasphaera_cds.fa")  # Remove the existing file
+}
+gunzip("tetrasphaera_cds.fa.gz")
+
+# Download E. coli coding sequences
+ecoli_url <- "http://ftp.ensemblgenomes.org/pub/bacteria/release-53/fasta/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655_gca_000005845/cds/Escherichia_coli_str_k_12_substr_mg1655_gca_000005845.ASM584v2.cds.all.fa.gz"
+download.file(ecoli_url, destfile = "ecoli_cds.fa.gz")
+
+# Unzip the E. coli file, removing existing unzipped file if necessary
+if (file.exists("ecoli_cds.fa")) {
+  file.remove("ecoli_cds.fa")  # Remove the existing file
+}
+gunzip("ecoli_cds.fa.gz")
+
+# Check if the files exist
+list.files()
+
+```
+```{r}
+library("seqinr")
+```
+```{r}
+cds <- seqinr::read.fasta("ecoli_cds.fa")
+str(head(cds))
+```
+```{r}
+cds <- seqinr::read.fasta("tetrasphaera_cds.fa")
+str(head(cds))
+```
+# Count the How many coding sequences are present in these organisms, and present in a table
+```{r}
+# Load necessary libraries
+library("seqinr")
+
+# Read the E. coli coding sequences
+ecoli_cds <- seqinr::read.fasta("ecoli_cds.fa")  # Ensure this file exists
+
+# Count the number of coding sequences for E. coli
+ecoli_count <- length(ecoli_cds)
+cat("Number of coding sequences in E. coli:", ecoli_count, "\n")
+
+# Read the Tetrasphaera coding sequences
+tetrasphaera_cds <- seqinr::read.fasta("tetrasphaera_cds.fa")  # Ensure this file exists
+
+# Count the number of coding sequences for Tetrasphaera
+tetrasphaera_count <- length(tetrasphaera_cds)
+cat("Number of coding sequences in Tetrasphaera:", tetrasphaera_count, "\n")
+
+# Create a summary table
+cds_counts <- data.frame(
+  Organism = c("Escherichia coli", "Tetrasphaera sp."),
+  CDS_Count = c(ecoli_count, tetrasphaera_count)
+)
+
+# Print the summary table
+print(cds_counts)
+
+```
+# Question 2
+# How much coding DNA is there in total for these two organisms? Present this in the form of a table. Describe any differences between the two organisms.
+```{r}
+# Load necessary libraries
+library("seqinr")
+
+# Read the E. coli coding sequences
+ecoli_cds <- seqinr::read.fasta("ecoli_cds.fa")  # Ensure this file exists
+
+# Calculate the total length of coding DNA for E. coli
+ecoli_total_length <- sum(sapply(ecoli_cds, function(seq) nchar(paste(seq, collapse = ""))))
+cat("Total length of coding DNA in E. coli:", ecoli_total_length, "\n")
+
+# Read the Tetrasphaera coding sequences
+tetrasphaera_cds <- seqinr::read.fasta("tetrasphaera_cds.fa")  # Ensure this file exists
+
+# Calculate the total length of coding DNA for Tetrasphaera
+tetrasphaera_total_length <- sum(sapply(tetrasphaera_cds, function(seq) nchar(paste(seq, collapse = ""))))
+cat("Total length of coding DNA in Tetrasphaera:", tetrasphaera_total_length, "\n")
+
+# Create a summary table
+total_length_table <- data.frame(
+  Organism = c("Escherichia coli", "Tetrasphaera sp."),
+  Total_Coding_DNA_Length = c(ecoli_total_length, tetrasphaera_total_length)
+)
+
+# Print the summary table
+print(total_length_table)
+
+```
+# Question3
+# Calculate the length of all coding sequences in these two organisms. Make a boxplot of coding sequence length in these organisms. What is the mean and median coding sequence length of these two organisms? Describe any differences between the two organisms.
+```{r}
+# Load necessary libraries
+library("seqinr")
+
+# Read the E. coli coding sequences
+ecoli_cds <- seqinr::read.fasta("ecoli_cds.fa")  # Ensure this file exists
+
+# Calculate the total length of coding DNA for E. coli
+ecoli_lengths <- sapply(ecoli_cds, function(seq) nchar(paste(seq, collapse = "")))
+ecoli_total_length <- sum(ecoli_lengths)
+cat("Total length of coding DNA in E. coli:", ecoli_total_length, "\n")
+
+# Read the Tetrasphaera coding sequences
+tetrasphaera_cds <- seqinr::read.fasta("tetrasphaera_cds.fa")  # Ensure this file exists
+
+# Calculate the total length of coding DNA for Tetrasphaera
+tetrasphaera_lengths <- sapply(tetrasphaera_cds, function(seq) nchar(paste(seq, collapse = "")))
+tetrasphaera_total_length <- sum(tetrasphaera_lengths)
+cat("Total length of coding DNA in Tetrasphaera:", tetrasphaera_total_length, "\n")
+
+# Create a summary table
+total_length_table <- data.frame(
+  Organism = c("Escherichia coli", "Tetrasphaera sp."),
+  Total_Coding_DNA_Length = c(ecoli_total_length, tetrasphaera_total_length)
+)
+
+# Print the summary table
+print(total_length_table)
+
+```
+# Box plot, Mean and median
+```{r}
+# Load necessary libraries
+library("seqinr")
+library("ggplot2")
+
+# Read the E. coli coding sequences
+ecoli_cds <- seqinr::read.fasta("ecoli_cds.fa")
+
+# Calculate lengths of coding sequences for E. coli
+ecoli_lengths <- sapply(ecoli_cds, function(seq) nchar(paste(seq, collapse = "")))
+
+# Read the Tetrasphaera coding sequences
+tetrasphaera_cds <- seqinr::read.fasta("tetrasphaera_cds.fa")
+
+# Calculate lengths of coding sequences for Tetrasphaera
+tetrasphaera_lengths <- sapply(tetrasphaera_cds, function(seq) nchar(paste(seq, collapse = "")))
+
+# Combine the lengths into a single data frame for plotting
+lengths_data <- data.frame(
+  Organism = rep(c("Escherichia coli", "Tetrasphaera sp."), 
+                 times = c(length(ecoli_lengths), length(tetrasphaera_lengths))),
+  Length = c(ecoli_lengths, tetrasphaera_lengths)
+)
+
+# Create a boxplot
+ggplot(lengths_data, aes(x = Organism, y = Length)) +
+  geom_boxplot(fill = c("skyblue", "lightgreen")) +
+  labs(title = "Boxplot of Coding Sequence Lengths",
+       x = "Organism",
+       y = "Coding Sequence Length") +
+  theme_minimal()
+
+# Calculate mean and median lengths
+mean_median_summary <- data.frame(
+  Organism = c("Escherichia coli", "Tetrasphaera sp."),
+  Mean_Length = c(mean(ecoli_lengths), mean(tetrasphaera_lengths)),
+  Median_Length = c(median(ecoli_lengths), median(tetrasphaera_lengths))
+)
+
+# Print the mean and median summary
+print(mean_median_summary)
+
+```
+# Question4
+# Calculate the frequency of DNA bases in the total coding sequences for both organisms. Perform the same calculation for the total protein sequence. Create bar plots for nucleotide and amino acid frequency. Describe any differences between the two organisms.
+```{r}
+
+# Function to check the FASTA file format
+check_fasta_format <- function(file_path) {
+  lines <- readLines(file_path, n = 10)  # Read the first 10 lines
+  return(lines)
+}
+
+# Check the E. coli FASTA file format
+ecoli_check <- check_fasta_format("ecoli_cds.fa")
+cat("First 10 lines of E. coli CDS file:\n")
+print(ecoli_check)
+
+# Check the Tetrasphaera FASTA file format
+tetrasphaera_check <- check_fasta_format("tetrasphaera_cds.fa")
+cat("First 10 lines of Tetrasphaera CDS file:\n")
+print(tetrasphaera_check)
+
+# Function to calculate base frequencies
+get_base_frequencies <- function(file_path) {
+  # Read the sequences manually
+  seqs <- readLines(file_path)
+  
+  # Initialize variables
+  sequences <- character()
+  
+  # Concatenate sequences
+  for (i in seq_along(seqs)) {
+    if (startsWith(seqs[i], ">")) {
+      # If it's a header, continue
+      next
+    } else {
+      # Otherwise, append the sequence
+      sequences <- c(sequences, seqs[i])
+    }
+  }
+  
+  # Combine all sequences into one string
+  all_sequences <- paste(sequences, collapse = "")
+  
+  # Calculate base frequencies
+  base_frequencies <- table(strsplit(all_sequences, split = "")[[1]])
+  
+  return(base_frequencies)
+}
+
+# Get base frequencies for E. coli
+ecoli_base_frequencies <- get_base_frequencies("ecoli_cds.fa")
+
+# Get base frequencies for Tetrasphaera
+tetrasphaera_base_frequencies <- get_base_frequencies("tetrasphaera_cds.fa")
+
+# Combine results into a single data frame
+base_frequencies <- data.frame(
+  Base = names(ecoli_base_frequencies),
+  E_coli_Count = as.numeric(ecoli_base_frequencies),
+  Tetrasphaera_Count = as.numeric(tetrasphaera_base_frequencies[names(ecoli_base_frequencies)])  # Align the bases
+)
+
+# Print the base frequencies
+print(base_frequencies)
+
+     
+```
+# Create a bar plot
+```{r}
+# Load necessary libraries
+library(ggplot2)
+install.packages("reshape2")
+library(reshape2)
+library(seqinr)
+
+# Function to check the FASTA file format
+check_fasta_format <- function(file_path) {
+  lines <- readLines(file_path, n = 10)  # Read the first 10 lines
+  return(lines)
+}
+
+# Check the E. coli FASTA file format
+ecoli_check <- check_fasta_format("ecoli_cds.fa")
+cat("First 10 lines of E. coli CDS file:\n")
+print(ecoli_check)
+
+# Check the Tetrasphaera FASTA file format
+tetrasphaera_check <- check_fasta_format("tetrasphaera_cds.fa")
+cat("First 10 lines of Tetrasphaera CDS file:\n")
+print(tetrasphaera_check)
+
+# Function to calculate base frequencies
+get_base_frequencies <- function(file_path) {
+  # Read the sequences manually
+  seqs <- readLines(file_path)
+  
+  # Initialize variables
+  sequences <- character()
+  
+  # Concatenate sequences
+  for (i in seq_along(seqs)) {
+    if (startsWith(seqs[i], ">")) {
+      # If it's a header, continue
+      next
+    } else {
+      # Otherwise, append the sequence
+      sequences <- c(sequences, seqs[i])
+    }
+  }
+  
+  # Combine all sequences into one string
+  all_sequences <- paste(sequences, collapse = "")
+  
+  # Calculate base frequencies
+  base_frequencies <- table(strsplit(all_sequences, split = "")[[1]])
+  
+  return(base_frequencies)
+}
+
+# Get base frequencies for E. coli
+ecoli_base_frequencies <- get_base_frequencies("ecoli_cds.fa")
+
+# Get base frequencies for Tetrasphaera
+tetrasphaera_base_frequencies <- get_base_frequencies("tetrasphaera_cds.fa")
+
+# Combine results into a single data frame
+base_frequencies <- data.frame(
+  Base = names(ecoli_base_frequencies),
+  E_coli_Count = as.numeric(ecoli_base_frequencies),
+  Tetrasphaera_Count = as.numeric(tetrasphaera_base_frequencies[names(ecoli_base_frequencies)])  # Align the bases
+)
+
+# Reshape the data for ggplot
+base_frequencies_melted <- melt(base_frequencies, id.vars = "Base")
+
+# Create the bar plot
+ggplot(base_frequencies_melted, aes(x = Base, y = value, fill = variable)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  labs(title = "Base Frequencies in E. coli and Tetrasphaera",
+       x = "DNA Base",
+       y = "Frequency") +
+  theme_minimal() +
+  scale_fill_manual(values = c("E_coli_Count" = "skyblue", "Tetrasphaera_Count" = "lightgreen")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+# Translate the proein
+```{r}
+# Read the E. coli coding sequences
+ecoli_cds <- read.fasta("ecoli_cds.fa")
+
+# Read the Tetrasphaera coding sequences
+tetrasphaera_cds <- read.fasta("tetrasphaera_cds.fa")
+
+```
+
+```{r}
+library(seqinr)
+
+```
+
+```{r}
+# Read the E. coli coding sequences
+ecoli_cds <- read.fasta("ecoli_cds.fa")
+
+# Read the Tetrasphaera coding sequences
+tetrasphaera_cds <- read.fasta("tetrasphaera_cds.fa")
+
+```
+
+```{r}
+# Function to translate DNA sequences to protein
+translate_to_protein <- function(dna_sequences) {
+  protein_sequences <- sapply(dna_sequences, function(seq) {
+    # Directly translate the sequence (it's now a character string)
+    protein <- seqinr::translate(seq)
+    return(paste(protein, collapse = ""))
+  })
+  return(protein_sequences)
+}
+
+# Translate the coding sequences
+ecoli_proteins <- translate_to_protein(ecoli_cds)
+tetrasphaera_proteins <- translate_to_protein(tetrasphaera_cds)
+
+```
+
+
+```{r}
+# Function to write protein sequences to a FASTA file
+write_proteins_to_fasta <- function(protein_sequences, file_name) {
+  write.fasta(sequences = protein_sequences,
+              names = paste("Protein", seq_along(protein_sequences), sep="_"),
+              file.out = file_name)
+}
+
+# Save the protein sequences
+write_proteins_to_fasta(ecoli_proteins, "ecoli_proteins.fa")
+write_proteins_to_fasta(tetrasphaera_proteins, "tetrasphaera_proteins.fa")
+
+```
+#Calculate the length of total protein sequence 
+```{r}
+# Calculate the total length of protein sequences
+ecoli_total_protein_length <- sum(nchar(ecoli_proteins))
+tetrasphaera_total_protein_length <- sum(nchar(tetrasphaera_proteins))
+
+# Print total protein lengths
+cat("Total protein length in E. coli:", ecoli_total_protein_length, "\n")
+cat("Total protein length in Tetrasphaera:", tetrasphaera_total_protein_length, "\n")
+
+
+```
+#calculate the amino acid sequences
+```{r}
+# Function to calculate amino acid frequencies
+calculate_aa_frequencies <- function(protein_sequences) {
+  all_proteins <- paste(protein_sequences, collapse = "")
+  aa_frequencies <- table(strsplit(all_proteins, split = "")[[1]])
+  return(aa_frequencies)
+}
+
+# Calculate amino acid frequencies for both organisms
+ecoli_aa_frequencies <- calculate_aa_frequencies(ecoli_proteins)
+tetrasphaera_aa_frequencies <- calculate_aa_frequencies(tetrasphaera_proteins)
+
+```
+
+# Create the bar plot
+```{r}
+# Combine frequencies into a single data frame
+aa_frequencies_df <- data.frame(
+  Amino_Acid = names(ecoli_aa_frequencies),
+  E_coli_Count = as.numeric(ecoli_aa_frequencies),
+  Tetrasphaera_Count = as.numeric(tetrasphaera_aa_frequencies[names(ecoli_aa_frequencies)])  # Align the amino acids
+)
+
+# Handle missing values (NAs) by replacing them with 0
+aa_frequencies_df[is.na(aa_frequencies_df)] <- 0
+
+# Reshape the data for plotting
+library(reshape2)
+aa_frequencies_melted <- melt(aa_frequencies_df, id.vars = "Amino_Acid")
+
+# Print the reshaped data
+print(aa_frequencies_melted)
+
+
+```
+```{r}
+library(ggplot2)
+
+# Create the bar plot
+ggplot(aa_frequencies_melted, aes(x = Amino_Acid, y = value, fill = variable)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Amino Acid Frequencies in Protein Sequences",
+       x = "Amino Acid",
+       y = "Frequency") +
+  theme_minimal()
+
+```
+# Question 5
+# Create a codon usage table and quantify the codon usage bias among all coding sequences. Describe any differences between the two organisms with respect to their codon usage bias. Provide charts to support your observations
+```{r}
+# Load necessary library
+library(seqinr)
+
+# Function to calculate codon usage
+calculate_codon_usage <- function(cds) {
+  # Concatenate all sequences into one
+  all_sequences <- paste(sapply(cds, function(seq) paste(seq, collapse = "")), collapse = "")
+  
+  # Split the sequences into codons
+  codons <- strsplit(all_sequences, "(?<=.{3})", perl = TRUE)[[1]]
+  
+  # Create a table of codon frequencies
+  codon_table <- table(codons)
+  return(codon_table)
+}
+
+# Function to calculate CAI
+calculate_cai <- function(codon_usage) {
+  # Example reference usage: a simple uniform distribution
+  reference_usage <- rep(1, length(codon_usage))  # Placeholder for reference usage
+  
+  # Calculate CAI
+  cai <- sum(codon_usage / reference_usage) / length(codon_usage)
+  return(cai)
+}
+
+```
+```{r}
+# Read E. coli and Tetrasphaera coding sequences
+ecoli_cds <- seqinr::read.fasta("ecoli_cds.fa")
+tetrasphaera_cds <- seqinr::read.fasta("tetrasphaera_cds.fa")
+
+```
+
+```{r}
+# Calculate codon usage for both organisms
+ecoli_codon_usage <- calculate_codon_usage(ecoli_cds)
+tetrasphaera_codon_usage <- calculate_codon_usage(tetrasphaera_cds)
+
+```
+```{r}
+# Function to extract codons from DNA sequences
+extract_codons <- function(dna_sequences) {
+  codons <- unlist(lapply(dna_sequences, function(seq) {
+    seq <- paste(seq, collapse = "")  # Combine list of characters into one string
+    return(strsplit(seq, split = "")[[1]])  # Split into individual nucleotides
+  }))
+  # Group nucleotides into codons
+  codons <- matrix(codons, ncol = 3, byrow = TRUE)
+  return(apply(codons, 1, paste, collapse = ""))
+}
+
+```
+
+```{r}
+# Count codon occurrences for a given set of sequences
+count_codons <- function(codons) {
+  codon_table <- table(codons)
+  return(codon_table)
+}
+
+```
+```{r}
+# Function to calculate codon usage bias (Normalized usage)
+calculate_codon_usage_bias <- function(codon_counts) {
+  total_codons <- sum(codon_counts)
+  codon_usage_bias <- codon_counts / total_codons
+  return(codon_usage_bias)
+}
+
+```
