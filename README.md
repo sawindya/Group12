@@ -96,6 +96,9 @@ num_genes_below_10 <- sum(gene_expression$mean_expression < 10)
 # Display the result
 num_genes_below_10
 ## [1] 35988
+
+#data is extracted from mean expression column from gene expression data set to ontain the result of 35988 which means value of less than 10 by creating a logical condition and then counting how many TRUE values result from it#
+
 Question5
 # Create a histogram of the mean expression values using base R
 hist(gene_expression$mean_expression,
@@ -110,6 +113,9 @@ Mean Expression
 Frequency
 0e+00 1e+05 2e+05 3e+05 4e+05 5e+05
 0 10000 30000 50000
+
+#histogram creation#
+
 Question 6
 # Read the CSV file into an R object
 growth_data <- read.csv("growth_data.csv")
@@ -118,6 +124,9 @@ column_names <- colnames(growth_data)
 print(column_names)
 ## [1] "Site" "TreeID" "Circumf_2005_cm" "Circumf_2010_cm"
 ## [5] "Circumf_2015_cm" "Circumf_2020_cm"
+
+
+
 Question 7
 #Read in the CSV file
 growth_data <- read.csv("growth_data.csv")
@@ -163,34 +172,14 @@ print(results)
 ## Site Measurement Mean SD
 ## 1 Control Start (2005) 5.078 1.059127
 ## 2 Control End (2020) 40.052 16.904428
+
+#mean and standard deviation was created#
+
+
 #question 8
-
-library(ggplot2)
-
-# Read the CSV file
-growth_data <- read.csv("growth_data.csv")
-
-# Create a new data frame for plotting
-plot_data <- data.frame(
-  Circumference = c(growth_data$Circumf_2005_cm, growth_data$Circumf_2020_cm),
-  Year = rep(c("Start (2005)", "End (2020)"), each = nrow(growth_data)),
-  Site = rep(growth_data$Site, 2)  # Adjust according to your structure
-)
-
-# Create the box plot
-ggplot(plot_data, aes(x = Year, y = Circumference, fill = Site)) +
-  geom_boxplot() +
-  labs(title = "Tree Circumference at Start (2005) and End (2020)",
-       y = "Circumference (cm)",
-       x = "Year") +
-  theme_minimal()
-#box plot of tree circumferance from the years 2005 to 2020#
-
-
 install.packages("ggplot2")
 ## Installing package into '/home/s224716571/R/x86_64-pc-linux-gnu-library/4.1'
 ## (as 'lib' is unspecified)
-#question 8
 
 library(ggplot2)
 
@@ -211,7 +200,8 @@ ggplot(plot_data, aes(x = Year, y = Circumference, fill = Site)) +
        y = "Circumference (cm)",
        x = "Year") +
   theme_minimal()
-#box plot of tree circumferance from the years 2005 to 2020#
+
+#box plot of tree circumferance from the years 2005 to 2020. the axis show how the data must be mapped on the box plot. the main function of the box plot is to summarize the distribution of the tree circumference for 10 years. the labs() code adds the lable to the plot such as the axis and titles#
 
 #question 9
 
