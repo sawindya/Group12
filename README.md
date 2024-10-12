@@ -151,5 +151,112 @@ print(results)
 ## Site Measurement Mean SD
 ## 1 Control Start (2005) 5.078 1.059127
 ## 2 Control End (2020) 40.052 16.904428
+#question 8
+
+library(ggplot2)
+
+# Read the CSV file
+growth_data <- read.csv("growth_data.csv")
+
+# Create a new data frame for plotting
+plot_data <- data.frame(
+  Circumference = c(growth_data$Circumf_2005_cm, growth_data$Circumf_2020_cm),
+  Year = rep(c("Start (2005)", "End (2020)"), each = nrow(growth_data)),
+  Site = rep(growth_data$Site, 2)  # Adjust according to your structure
+)
+
+# Create the box plot
+ggplot(plot_data, aes(x = Year, y = Circumference, fill = Site)) +
+  geom_boxplot() +
+  labs(title = "Tree Circumference at Start (2005) and End (2020)",
+       y = "Circumference (cm)",
+       x = "Year") +
+  theme_minimal()
+
+
+install.packages("ggplot2")
+## Installing package into '/home/s224716571/R/x86_64-pc-linux-gnu-library/4.1'
+## (as 'lib' is unspecified)
+#question 8
+
+library(ggplot2)
+
+# Read the CSV file
+growth_data <- read.csv("growth_data.csv")
+
+# Create a new data frame for plotting
+plot_data <- data.frame(
+  Circumference = c(growth_data$Circumf_2005_cm, growth_data$Circumf_2020_cm),
+  Year = rep(c("Start (2005)", "End (2020)"), each = nrow(growth_data)),
+  Site = rep(growth_data$Site, 2)  # Adjust according to your structure
+)
+
+# Create the box plot
+ggplot(plot_data, aes(x = Year, y = Circumference, fill = Site)) +
+  geom_boxplot() +
+  labs(title = "Tree Circumference at Start (2005) and End (2020)",
+       y = "Circumference (cm)",
+       x = "Year") +
+  theme_minimal()
+
+
+#question 9
+
+install.packages("dplyr")
+## Installing package into '/home/s224716571/R/x86_64-pc-linux-gnu-library/4.1'
+## (as 'lib' is unspecified)
+# Load necessary library
+library(dplyr)
+## 
+## Attaching package: 'dplyr'
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+# Read the CSV file
+growth_data <- read.csv("growth_data.csv")
+
+# Calculate growth and summarize mean growth for each site
+growth_summary <- growth_data %>%
+  mutate(Growth = Circumf_2020_cm - Circumf_2010_cm) %>%
+  group_by(Site) %>%
+  summarise(Mean_Growth = mean(Growth, na.rm = TRUE))
+
+# Display the results
+print(growth_summary)
+## # A tibble: 2 × 2
+##   Site      Mean_Growth
+##   <chr>           <dbl>
+## 1 northeast        42.9
+## 2 southwest        35.5
+#question 10
+
+# Load necessary library
+library(dplyr)
+
+# Read the CSV file
+growth_data <- read.csv("growth_data.csv")
+
+# Calculate growth for each site
+growth_data$Growth <- growth_data$Circumf_2020_cm - growth_data$Circumf_2010_cm
+
+# Perform t-test comparing growth between Control and Treatment
+t_test_result <- t.test(Growth ~ Site, data = growth_data)
+
+# Display the results
+print(t_test_result)
+## 
+##  Welch Two Sample t-test
+## 
+## data:  Growth by Site
+## t = 1.8882, df = 87.978, p-value = 0.06229
+## alternative hypothesis: true difference in means between group northeast and group southwest is not equal to 0
+## 95 percent confidence interval:
+##  -0.3909251 15.2909251
+## sample estimates:
+## mean in group northeast mean in group southwest 
+##                   42.94                   35.49
 ## 3 Treatment Start (2005) 5.076 1.060527
 ## 4 Treatment End (2020) 59.772 22.577839
