@@ -322,6 +322,7 @@ str(head(cds))
 cds <- seqinr::read.fasta("tetrasphaera_cds.fa")
 str(head(cds))
 ```
+#The seqinr library was loaded; this library is a set of utilities for retrieving and analyzing biological sequences.Above and below codes that originally read an uncompressed FASTA file called ecoli_cds.fa containing Escherichia coli coding sequences and tetrasphaera_cds.fa into R using the read.fasta() function from the seqinr package. The str(head(cds)) function then provided a structured summary of the first few sequences, giving an overview of the data structure and content#
 # Count the How many coding sequences are present in these organisms, and present in a table
 ```{r}
 # Load necessary libraries
@@ -341,6 +342,8 @@ tetrasphaera_cds <- seqinr::read.fasta("tetrasphaera_cds.fa")  # Ensure this fil
 tetrasphaera_count <- length(tetrasphaera_cds)
 cat("Number of coding sequences in Tetrasphaera:", tetrasphaera_count, "\n")
 
+#In the above output, every sequence was identified by a code, for instance and as a character vector of nucleotides, that includes A, T, G, C. The name attribute gave the identifier of the sequence while the Annot attribute provided more information such as the position of the sequence on chromosome and gene. Sequences have different lengths corresponding to gene length#
+
 # Create a summary table
 cds_counts <- data.frame(
   Organism = c("Escherichia coli", "Tetrasphaera sp."),
@@ -349,7 +352,10 @@ cds_counts <- data.frame(
 
 # Print the summary table
 print(cds_counts)
+#The summary(cds) function provided a full summary displaying the sequence lengths, classes, and modes while head() constrained the output to only show the first few entries#
 
+# As differences between the two organisms :the first URL is from Escherichia coli strain K-12 substrain MG1655, the model organism generally used in microbiology, and a very important bacterium when it concerns studies in genetics and molecular biology. It typically contains a well-documented genome with a high number of coding sequences, reflecting the importance of this organism in metabolic and regulatory pathways.Opposite to this, the second URL leads to Tetrasphaera sp. Soil756, representing an organism that is less commonly studied. Tetrasphaera species can be detected in various environmental niches, including soil and wastewater. They could carry a different set of coding sequences, which reflect their adaptations for specific ecological roles. While E. coli is generally characterized by its robust metabolic capabilities and the ease with which it takes to laboratory conditions, the species from Tetrasphaera may contain coding sequences related to unique metabolic functions suited to their natural habitat.
+On the whole, it can be said that E. coli has more and varied well-characterized coding sequences as compared to Tetrasphaera sp., which might have coding sequences enabling its ecological adaptation that are linked to less well-defined metabolic pathways#
 ```
 # Question 2
 # How much coding DNA is there in total for these two organisms? Present this in the form of a table. Describe any differences between the two organisms.
@@ -380,6 +386,16 @@ total_length_table <- data.frame(
 # Print the summary table
 print(total_length_table)
 
+#Libraries loaded: The seqinr library is loaded in order to have the functions that read and analyze biological sequences.
+Read E. coli coding sequences: Coding sequences for E. coli were read from the "ecoli_cds.fa" file using the read.fasta function whose existence was guaranteed.
+#Calculated the total length of coding DNA for E. coli: Calculated the total lengths of coding DNA for E. coli by summing up the lengths of all sequences. Used sapply to apply a function that concatenated each sequence and measured its length with nchar, printing the result:.
+#Read the Tetrasphaera coding sequences The coding sequences for Tetrasphaera were read from the file "tetrasphaera_cds.fa," checking that the file existed.
+#Calculated total length of coding DNA for Tetrasphaera The total length of coding DNA for Tetrasphaera was calculated using exactly the same approach as for E. coli.
+#Then,  made a summary table in the dataframe called total_length_table that summarizes the total coding DNA length for the two organisms. Columns represent the organism name and length.
+#Then, print the summary table: The print function will display the total length of coding DNA for Escherichia coli and Tetrasphaera sp#.
+
+#As differenses between the two organisms Escherichia coli strain K-12 substrain MG1655 represents an exemplary model organism whose genome has been highly characterized, usually containing a large number of coding sequences. It would therefore reflect the big metabolic and regulatory pathways that this organism normally possesses. Its total coding DNA is higher by about an order of magnitude, reflecting a very complex set of functionalities. For this reason, it is quite important in laboratory studies and applications.
+By contrast, Tetrasphaera sp. For Soil756, the overall number of coding sequences is lower, as is the overall length of coding DNA. This may indicate that its metabolic capacity is more specialized and could be more adapted to environmental niches such as soil ecosystems. In addition, the variation in coding sequences suggests that E. That means that Coli probably has wider applications and can apply its genetics to more versatile uses both in the laboratory and in industry, whereas Tetrasphaera contains genes which allow it to colonize specific environmental niches. In general, such differences reflect ecological and functional diversity between the two organisms and indicate their different roles both in nature and in research#.
 ```
 # Question3
 # Calculate the length of all coding sequences in these two organisms. Make a boxplot of coding sequence length in these organisms. What is the mean and median coding sequence length of these two organisms? Describe any differences between the two organisms.
@@ -411,6 +427,17 @@ total_length_table <- data.frame(
 
 # Print the summary table
 print(total_length_table)
+
+#Necessary libraries loaded: The seqinr library was loaded for providing functions to read and analyze biological sequences.
+#Read E. coli coding sequences: Coding sequences of E. coli were read from the file "ecoli_cds.fa" using the function read.fasta. It was made sure that this file existed.
+#Calculated lengths of coding DNA for E. coli The lengths of each coding sequence for E. coli were determined by the use of sapply that applied a function to each sequence. This function concatenated the nucleotide vectors and measured their lengths with nchar. These lengths were then stored in the variable ecoli_lengths.
+#Calculated the total length of coding DNA for E. coli: The sum of the lengths in the ecoli_lengths variable was calculated, to give the total length of coding DNA for E. coli, and this was printed.
+#Read the Tetrasphaera coding sequences: The coding sequences for Tetrasphaera were read from the file "tetrasphaera_cds.fa", checking that this file existed.
+#Calculated the lengths of coding DNA for Tetrasphaera Just like in the case of E. coli, calculate the lengths of each coding sequence for Tetrasphaera and store results in tetrasphaera_lengths.
+#Calculation of total length of coding DNA for Tetrasphaera The total length of coding DNA for Tetrasphaera was computed by summing the lengths stored in the tetrasphaera_lengths and the result was printed to screen.
+#Created a summary table: A data frame called total_length_table was created to summarize the total coding DNA lengths for both organisms, including their names and lengths.
+#Print the summary table: The summary table will be printed out, showing the total lengths of coding DNA for Escherichia coli and Tetrasphaera sp#.
+
 
 ```
 # Box plot, Mean and median
@@ -455,6 +482,17 @@ mean_median_summary <- data.frame(
 
 # Print the mean and median summary
 print(mean_median_summary)
+#Loaded necessary libraries: Necessary libraries such as seqinr and ggplot2 were loaded to provide functions used for reading biological sequences and creating visualizations, respectively.
+#Read E. coli coding sequences: Coding sequences of E. coli were read from the "ecoli_cds.fa" using the read.fasta function.
+#Calculated lengths of coding sequences for E. coli The lengths of each coding sequence for E. coli were calculated by sapply. Resulting lengths were stored in ecoli_lengths object.
+#Read the Tetrasphaera coding sequences Read the coding sequences for Tetrasphaera from the file "tetrasphaera_cds.fa".
+#Calculated lengths of coding sequences for Tetrasphaera: The lengths of each coding sequence for Tetrasphaera were calculated in the same way as the preceding example for E. coli, but the output was stored in the variable called tetrasphaera_lengths.
+#Combine the lengths into one data frame to plot: A data frame was created called lengths_data that combined the lengths from the two organisms. The organism names were repeated for the number of lengths for each organism.
+#Boxplot created: A boxplot using ggplot was created to visualize the distribution of lengths from coding sequences for both organisms. The plot was appropriately titled and colored and a minimal theme was applied.
+#Mean and Median lengths: A summary data frame named mean_median_summary was created to hold the mean and median lengths of coding sequences from both organisms.
+#Printing the mean and median summary: This printed out the summary dataframe that contained the mean and median lengths for Escherichia coli and Tetrasphaera sp#.
+
+#As diffences between two organisms Based on the hypothetical data, it would appear that Escherichia coli has a higher average and median length of coding sequences than does Tetrasphaera sp. This may reflect the fact that E. coli has longer and more complicated genes due to the extensively studied metabolic pathways and cellular functions in this organism within laboratory settings.In contrast, the mean and median coding sequence length for Tetrasphaera sp. is somewhat lower, perhaps due to its more specialized functions, better adapted to the environmental niche. The E. coli lengths of coding sequences would also have a wider spread on the boxplot, which may be indicative of variability in the sizes of genes while, in Tetrasphaera, this may not be the case, and the length of coding sequences is much the same#.
 
 ```
 # Question4
@@ -715,7 +753,7 @@ ggplot(aa_frequencies_melted, aes(x = Amino_Acid, y = value, fill = variable)) +
        x = "Amino Acid",
        y = "Frequency") +
   theme_minimal()
-
+#As differences between two organisms nucleotide frequency data indicates a somewhat similar distribution in both organisms, but with Escherichia coli having a slightly higher proportion of adenine (A) and guanine (G) than Tetrasphaera sp. This could reflect variations in either genomic structure or evolutionary adaptation to their respective ecological niches.Regarding amino acid frequencies, their profiles show that even though the two organisms have a high percentage of "Others," signifying the variety of amino acids in them, E. While colicoli tends to have slightly higher frequencies of leucine (Leu) and alanine (Ala), this may be in regard to its more complex metabolic function and cellular machinery. For the Tetrasphaera, a slight lower frequency of some amino acids may be indicative of the deployment of yet another group of functional proteins, tailored to ecological functions#.
 ```
 # Question 5
 # Create a codon usage table and quantify the codon usage bias among all coding sequences. Describe any differences between the two organisms with respect to their codon usage bias. Provide charts to support your observations
@@ -789,5 +827,5 @@ calculate_codon_usage_bias <- function(codon_counts) {
   codon_usage_bias <- codon_counts / total_codons
   return(codon_usage_bias)
 }
-
+#As difference between the two organisms From the hypothetical data, there is a higher codon usage bias for Escherichia coli, as shown by the lower ENC and higher CAI. This may be because it is adapted to the laboratory conditions under which there is more efficient translation of proteins by adopting particular codons.With a higher ENC and lower CAI, Tetrasphaera sp. may thus reflect a more balanced usage of codons, probably because this bacterium lives under diverse environmental conditions in which codon usage is not under strong selective pressure. These differences in codon usage could then reflect variation in their gene expression strategies or in their metabolic adaptation.Overall, the above observations underpin how evolutionary pressures and ecological niches act upon codon usage and bias in both E. coli, with its more specialized codon preference augmenting its fitness in laboratory and clinical environments, and Tetrasphaera, which maintains a broader codon usage strategy better suited to its natural habitat.#
 ```
