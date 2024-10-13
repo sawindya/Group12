@@ -753,6 +753,11 @@ ggplot(aa_frequencies_melted, aes(x = Amino_Acid, y = value, fill = variable)) +
        x = "Amino Acid",
        y = "Frequency") +
   theme_minimal()
+#check_fasta_format reads the 10 lines of the FASTA file and its format is verified. The sign > is used to indicate the head of the sequence which is then followed by the amini acid sequence#
+# get_base_frequencies calculates the A, T, G and C in the nucleotide sequence that is in the FASTA file. Both E. coli and Tetrasphaera FASTA files are  calculated for their base counts and added to a data frame for the purpose of comparison 
+#printing the base frequencies shows how the comparison is made.
+#The code generates a bar plot using ggplot2 with DNA bases as A, T, G, and C on the x-axis and values of frequencies on the y-axis. The fill aesthetic is used to discern between the two organisms, namely E. coli and Tetrasphaera. The position_dodge() separates the bars from each other for every organism. In the below code, scale_fill_manual() function is used to set the custom color of E. coli and Tetrasphaera bars in custom colors.
+
 #As differences between two organisms nucleotide frequency data indicates a somewhat similar distribution in both organisms, but with Escherichia coli having a slightly higher proportion of adenine (A) and guanine (G) than Tetrasphaera sp. This could reflect variations in either genomic structure or evolutionary adaptation to their respective ecological niches.Regarding amino acid frequencies, their profiles show that even though the two organisms have a high percentage of "Others," signifying the variety of amino acids in them, E. While colicoli tends to have slightly higher frequencies of leucine (Leu) and alanine (Ala), this may be in regard to its more complex metabolic function and cellular machinery. For the Tetrasphaera, a slight lower frequency of some amino acids may be indicative of the deployment of yet another group of functional proteins, tailored to ecological functions#.
 ```
 # Question 5
@@ -893,6 +898,12 @@ ggplot(final_results_melted, aes(x = kmers, y = Frequency, fill = Organism)) +
 
 
 ```
+#Loads the libraries: seqinr for reading FASTA and translating DNA to protein, ggplot2 for plotting, dplyr for data manipulation, and reshape2 for reshaping data.
+#Reads the FASTA files containing the coding sequences for E. coli and Tetrasphaera using the read.fasta function.
+translate_to_protein <- function {
+#This function translates the DNA sequences into protein sequences. It first uses the seqinr::translate function that will change each sequence into amino acids.
+#calculate_kmer_frequencies: This function will calculate the frequency of each kmer by dividing its count by the total number of kmers in the organism. melt is used to reshape the data for plotting. It transforms the frequency columns for E. coli and Tetrasphaera into a long format with separate columns for the organism and frequency. ggplot2 creates a bar plot comparing the k-mer frequencies between E. coli and Tetrasphaera.
+
 #As difference between the two organisms From the hypothetical data, there is a higher codon usage bias for Escherichia coli, as shown by the lower ENC and higher CAI. This may be because it is adapted to the laboratory conditions under which there is more efficient translation of proteins by adopting particular codons.With a higher ENC and lower CAI, Tetrasphaera sp. may thus reflect a more balanced usage of codons, probably because this bacterium lives under diverse environmental conditions in which codon usage is not under strong selective pressure. These differences in codon usage could then reflect variation in their gene expression strategies or in their metabolic adaptation.Overall, the above observations underpin how evolutionary pressures and ecological niches act upon codon usage and bias in both E. coli, with its more specialized codon preference augmenting its fitness in laboratory and clinical environments, and Tetrasphaera, which maintains a broader codon usage strategy better suited to its natural habitat.#
 ```
 #Question6
@@ -991,7 +1002,15 @@ extract_kmers <- function(proteins, k) {
 }
 
 # Step 3: Count k-mers
-count_kmers 
+count_kmers
+
+#This part of the script reads the Tetrasphaera protein sequences from a FASTA file and converts the entries into strings using read.fasta and apply, then uses extract_kmers, and sets them as a data frame.
+#expected_frequency calculates the expected frequency of each k-mer under a random distribution (20 possible amino acids, to the power of k).
+#Loops over k = 3,4,5; extracts k-mers; counts them; calculates expected frequencies and over- and under-represented k-mers. Results are returned as a list.
+#Reads in the E. coli and Tetrasphaera protein sequences using read_proteins.
+extract_kmers function extracts the k-mers to be compared from both organisms.
+#This code is incomplete for the E. coli comparison, but presumably you would apply the same count_kmers and calculate_expected_frequency functions as done for Tetrasphaera, followed by an additional comparison step, for example using ggplot2 for a visual comparison.
+
 #As differences between two organisms  in k-mer frequencies between the organism of interest and Escherichia coli bear immense functional and evolutionary implications. The over-represented k-mers in the organism of interest may represent important functional or structural motifs in adapting to specific roles in biology, such as metabolic pathways, stress responses, and adaptations to ecological niches. On the other hand, the under-represented k-mers may indicate the lack of structural features or functions compared with E. coli and may further suggest evolutionary losses or shifts in functional relevance. These differences in k-mer representation are the result of different evolutionary pressures the two organisms have faced; E. Whereas coli is a model organism that has been extensively studied and optimized for laboratory conditions, the organism of interest may have evolved to prosper in unique environmental niches, thus affecting its protein composition. In general, the presence and frequency of some k-mers carry meaningful information on the evolutionary history, ecological adaptations, and functional capabilities of such organisms. The list of such k-mers could be further analyzed; for example, functional annotations could be done for proteins that may use them, toward more certain conclusions about biological significance.
 
 ```
