@@ -758,74 +758,240 @@ ggplot(aa_frequencies_melted, aes(x = Amino_Acid, y = value, fill = variable)) +
 # Question 5
 # Create a codon usage table and quantify the codon usage bias among all coding sequences. Describe any differences between the two organisms with respect to their codon usage bias. Provide charts to support your observations
 ```{r}
-# Load necessary library
+# Load necessary libraries
 library(seqinr)
+library(ggplot2)
+library(dplyr)
 
-# Function to calculate codon usage
-calculate_codon_usage <- function(cds) {
-  # Concatenate all sequences into one
-  all_sequences <- paste(sapply(cds, function(seq) paste(seq, collapse = "")), collapse = "")
-  
-  # Split the sequences into codons
-  codons <- strsplit(all_sequences, "(?<=.{3})", perl = TRUE)[[1]]
-  
-  # Create a table of codon frequencies
-  codon_table <- table(codons)
-  return(codon_table)
-}
-
-# Function to calculate CAI
-calculate_cai <- function(codon_usage) {
-  # Example reference usage: a simple uniform distribution
-  reference_usage <- rep(1, length(codon_usage))  # Placeholder for reference usage
-  
-  # Calculate CAI
-  cai <- sum(codon_usage / reference_usage) / length(codon_usage)
-  return(cai)
-}
-
-```
-```{r}
-# Read E. coli and Tetrasphaera coding sequences
+# Step 1: Read the coding sequences for E. coli and Tetrasphaera
 ecoli_cds <- seqinr::read.fasta("ecoli_cds.fa")
 tetrasphaera_cds <- seqinr::read.fasta("tetrasphaera_cds.fa")
 
-```
+# Step 2: Function to translate DNA sequences to protein
+translate_to_protein <- function(dna_sequences) {
+  protein_sequences <- sapply(dna_sequences, function(seq) {
+    protein <- seqinr::translate(seq)
+    return(paste(protein, collapse = ""))
+  })
+  return(protein_sequences)
+}
 
-```{r}
-# Calculate codon usage for both organisms
-ecoli_codon_usage <- calculate_codon_usage(ecoli_cds)
-tetrasphaera_codon_usage <- calculate_codon_usage(tetrasphaera_cds)
+# Step 3: Translate the coding sequences
+ecoli_proteins <- translate_to_protein(ecoli_cds)
+tetrasphaera_proteins <- translate_to_protein(tetrasphaera_cds)
 
-```
-```{r}
-# Function to extract codons from DNA sequences
-extract_codons <- function(dna_sequences) {
-  codons <- unlist(lapply(dna_sequences, function(seq) {
-    seq <- paste(seq, collapse = "")  # Combine list of characters into one string
-    return(strsplit(seq, split = "")[[1]])  # Split into individual nucleotides
+# Step 4: Function to extract k-mers
+extract_kmers <- function(proteins, k) {
+  kmers <- unlist(lapply(proteins, function(seq) {
+    sapply(1:(nchar(seq) - k + 1), function(i) substr(seq, i, i + k - 1))
   }))
-  # Group nucleotides into codons
-  codons <- matrix(codons, ncol = 3, byrow = TRUE)
-  return(apply(codons, 1, paste, collapse = ""))
+  return(kmers)
 }
+
+# Step 5: Count k-mers
+count_kmers <- function(kmers) {
+  return(table(kmers))
+}
+
+# Step 6: Calculate k-mer frequencies
+calculate_kmer_frequencies <- function(kmer_counts, total_kmers) {
+  return(kmer_counts / total_kmers)
+}
+
+# Step 7: Perform k-mer analy
 
 ```
 
+
+
 ```{r}
-# Count codon occurrences for a given set of sequences
-count_codons <- function(codons) {
-  codon_table <- table(codons)
-  return(codon_table)
+# Load required libraries
+library(seqinr)
+library(ggplot2)
+library(dplyr)
+library(reshape2)
+
+# Step 1: Read the coding sequences for E. coli and Tetrasphaera
+ecoli_cds <- seqinr::read.fasta("ecoli_cds.fa")
+tetrasphaera_cds <- seqinr::read.fasta("tetrasphaera_cds.fa")
+
+# Step 2: Function to translate DNA sequences to protein
+translate_to_protein <- function(dna_sequences) {
+  protein_sequences <- sapply(dna_sequences, function(seq) {
+    protein <- seqinr::translate(seq)
+    return(paste(protein, collapse = ""))
+  })
+  return(protein_sequences)
 }
 
-```
-```{r}
-# Function to calculate codon usage bias (Normalized usage)
-calculate_codon_usage_bias <- function(codon_counts) {
-  total_codons <- sum(codon_counts)
-  codon_usage_bias <- codon_counts / total_codons
-  return(codon_usage_bias)
+# Step 3: Translate the coding sequences
+ecoli_proteins <- translate_to_protein(ecoli_cds)
+tetrasphaera_proteins <- translate_to_protein(tetrasphaera_cds)
+
+# Step 4: Function to extract k-mers
+extract_kmers <- function(proteins, k) {
+  kmers <- unlist(lapply(proteins, function(seq) {
+    sapply(1:(nchar(seq) - k + 1), function(i) substr(seq, i, i + k - 1))
+  }))
+  return(kmers)
 }
+
+# Step 5: Count k-mers
+count_kmers <- function(kmers) {
+  return(as.data.frame(table(kmers)))
+}
+
+# Step 6: Calculate k-mer frequencies
+calculate_kmer_frequencies <- function(kmer_counts, total_kmers) {
+  kmer_counts$Frequency <- kmer_counts$Freq / total_kmers
+  return(kmer_counts)
+}
+
+# Step 7: Perform k-mer analysis for k = 3 to 5
+kmer_results <- list()
+
+for (k in 3:5) {
+  ecoli_kmers <- extract_kmers(ecoli_proteins, k)
+  tetrasphaera_kmers <- extract_kmers(tetrasphaera_proteins, k)
+
+  ecoli_kmer_counts <- count_kmers(ecoli_kmers)
+  tetrasphaera_kmer_counts <- count_kmers(tetrasphaera_kmers)
+
+  total_ecoli_kmers <- sum(ecoli_kmer_counts$Freq)
+  total_tetrasphaera_kmers <- sum(tetrasphaera_kmer_counts$Freq)
+
+  ecoli_kmer_freqs <- calculate_kmer_frequencies(ecoli_kmer_counts, total_ecoli_kmers)
+  tetrasphaera_kmer_freqs <- calculate_kmer_frequencies(tetrasphaera_kmer_counts, total_tetrasphaera_kmers)
+
+  # Merge results into one data frame
+  combined_results <- merge(ecoli_kmer_freqs, tetrasphaera_kmer_freqs, by = "kmers", suffixes = c("_E_coli", "_Tetrasphaera"))
+  
+  # Store the results
+  kmer_results[[as.character(k)]] <- combined_results
+}
+
+# Combine results for all k-values
+final_results <- do.call(rbind, kmer_results)
+
+# Step 8: Reshape for plotting
+final_results_melted <- melt(final_results, id.vars = "kmers",
+                              measure.vars = c("Frequency_E_coli", "Frequency_Tetrasphaera"),
+                              variable.name = "Organism", value.name = "Frequency")
+
+# Modify the Organism names for clarity
+final_results_melted$Organism <- gsub("Frequency_", "", final_results_melted$Organism)
+
+# Step 9: Plot k-mer frequency comparison
+ggplot(final_results_melted, aes(x = kmers, y = Frequency, fill = Organism)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "K-mer Frequency Comparison (3-5 Amino Acids)",
+       x = "K-mer",
+       y = "Frequency") +
+  scale_fill_manual(values = c("E_coli" = "blue", "Tetrasphaera" = "green")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
 #As difference between the two organisms From the hypothetical data, there is a higher codon usage bias for Escherichia coli, as shown by the lower ENC and higher CAI. This may be because it is adapted to the laboratory conditions under which there is more efficient translation of proteins by adopting particular codons.With a higher ENC and lower CAI, Tetrasphaera sp. may thus reflect a more balanced usage of codons, probably because this bacterium lives under diverse environmental conditions in which codon usage is not under strong selective pressure. These differences in codon usage could then reflect variation in their gene expression strategies or in their metabolic adaptation.Overall, the above observations underpin how evolutionary pressures and ecological niches act upon codon usage and bias in both E. coli, with its more specialized codon preference augmenting its fitness in laboratory and clinical environments, and Tetrasphaera, which maintains a broader codon usage strategy better suited to its natural habitat.#
+```
+#Question6
+#In the organism of interest, identify 10 protein sequence k-mers of length 3-5 which are the most over- and under-represented k-mers in your organism of interest. Are these k-mers also over- and under-represented in E. coli to a similar extent? Provide plots to support your observations. Why do you think these sequences are present at different levels in the genomes of these organisms?
+
+# Identify 10 protein sequence k-mers of length 3-5 which are the most over- and under-represented k-mers in Tetrasphaera
+```{r}
+# Load required libraries
+library(seqinr)
+library(dplyr)
+
+# Step 1: Read the Tetrasphaera protein sequences
+tetrasphaera_proteins <- seqinr::read.fasta("tetrasphaera_proteins.fa")
+tetrasphaera_proteins <- sapply(tetrasphaera_proteins, function(x) paste(x, collapse = ""))
+
+# Step 2: Function to extract k-mers
+extract_kmers <- function(proteins, k) {
+  kmers <- unlist(lapply(proteins, function(seq) {
+    sapply(1:(nchar(seq) - k + 1), function(i) substr(seq, i, i + k - 1))
+  }))
+  return(kmers)
+}
+
+# Step 3: Count k-mers
+count_kmers <- function(kmers) {
+  return(as.data.frame(table(kmers)))
+}
+
+# Step 4: Calculate expected frequencies
+calculate_expected_frequency <- function(total_kmers, k) {
+  amino_acid_count <- 20  # Number of amino acids
+  expected_count <- (total_kmers - k + 1) / (amino_acid_count^k)
+  return(expected_count)
+}
+
+# Step 5: Identify over- and under-represented k-mers
+identify_represented_kmers <- function(kmer_counts, expected_count) {
+  kmer_counts$Expected <- expected_count
+  kmer_counts$Log2FC <- log2(kmer_counts$Freq / kmer_counts$Expected)
+
+  # Identify over-represented and under-represented k-mers
+  over_represented <- kmer_counts %>% filter(Log2FC > 1) %>% arrange(desc(Log2FC))
+  under_represented <- kmer_counts %>% filter(Log2FC < -1) %>% arrange(Log2FC)
+
+  return(list(over_represented = over_represented, under_represented = under_represented))
+}
+
+# Step 6: Perform analysis for k = 3 to 5
+kmer_results <- list()
+
+for (k in 3:5) {
+  tetrasphaera_kmers <- extract_kmers(tetrasphaera_proteins, k)
+  tetrasphaera_kmer_counts <- count_kmers(tetrasphaera_kmers)
+
+  total_tetrasphaera_kmers <- sum(tetrasphaera_kmer_counts$Freq)
+  expected_count <- calculate_expected_frequency(total_tetrasphaera_kmers, k)
+
+  results <- identify_represented_kmers(tetrasphaera_kmer_counts, expected_count)
+  kmer_results[[as.character(k)]] <- results
+}
+
+# Step 7: Display results
+for (k in 3:5) {
+  cat(paste("K =", k, "\n"))
+  cat("Over-represented k-mers:\n")
+  print(head(kmer_results[[as.character(k)]]$over_represented, 10))
+  cat("Under-represented k-mers:\n")
+  print(head(kmer_results[[as.character(k)]]$under_represented, 10))
+  cat("\n")
+}
+
+```
+#Comparison with the E.coli
+```{r}
+# Load required libraries
+library(seqinr)
+library(dplyr)
+library(ggplot2)
+
+# Function to read protein sequences
+read_proteins <- function(file_path) {
+  proteins <- seqinr::read.fasta(file_path)
+  return(sapply(proteins, function(x) paste(x, collapse = "")))
+}
+
+# Step 1: Read the protein sequences for E. coli and Tetrasphaera
+tetrasphaera_proteins <- read_proteins("tetrasphaera_proteins.fa")
+ecoli_proteins <- read_proteins("ecoli_proteins.fa")
+
+# Step 2: Function to extract k-mers
+extract_kmers <- function(proteins, k) {
+  kmers <- unlist(lapply(proteins, function(seq) {
+    sapply(1:(nchar(seq) - k + 1), function(i) substr(seq, i, i + k - 1))
+  }))
+  return(kmers)
+}
+
+# Step 3: Count k-mers
+count_kmers 
+
+
 ```
